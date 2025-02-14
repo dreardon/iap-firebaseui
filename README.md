@@ -125,7 +125,8 @@ gcloud run deploy ${SERVICE_NAME} \
 
 ## Configure IAP for External Identities
 Once the Cloud Run deployment above has completed, you'll need the public URL of the Cloud Run instance. You'll need to initialize the OAuth Consent screen in the [console](https://console.cloud.google.com/auth/branding) or through the following commands.
-```json
+
+```bash
 OAUTH_TITLE="IAP Protected App Engine Example"
 
 gcloud iap oauth-brands create \
