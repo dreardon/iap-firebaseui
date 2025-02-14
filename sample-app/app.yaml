@@ -1,0 +1,17 @@
+runtime: nodejs20
+
+instance_class: F1
+automatic_scaling:
+  max_instances: 1
+
+handlers:
+- url: .*
+  secure: always
+  script: auto
+
+env_variables:
+  BASE_URL: [Your App Engine URL]
+  CLIENT_ID: [Your IDP OIDC Application Client ID]
+  CLIENT_SECRET: [Your IDP OIDC Application Secret ID]
+  ISSUER_BASE_URL: [Your IDP OIDC Issuer URL]
+  SESSION_SECRET: [Express Web Server Session Secret]

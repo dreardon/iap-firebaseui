@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login</title>
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  </head>
+  <body>
+    <% if (!isAuthenticated) { %>
+      <% if (!iap_user) { %>
+        <p>Welcome to the web server index page (No IAP)</p>
+      <% } else { %>
+        <p>Welcome to the web server index page (IAP Enabled) <br /> 
+          IAP Provider: <%- (provider) %> <br/>
+          IAP User: <%- (iap_user) %> </p>
+      <% } %>
+      <a class="btn btn-primary" href="/login" role="button">Log In to IDP</a>
+    <% } else { %>
+      <p>You're logged in with your IDP</p>
+      <a class="btn btn-primary" href="/profile?provider=<%= provider %>" role="button">View IDP User Profile</a>
+    <% } %>
+    <hr>
+    <% if (decoded_iap_jwt) { %>
+      <p>IAP JWT</p>
+      <pre>
+        <%= JSON.stringify(decoded_iap_jwt, null, 2) %>
+      </pre>
+    <% } %>
+  </body>
+
+</html>

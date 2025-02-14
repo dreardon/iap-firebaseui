@@ -1,0 +1,19 @@
+{
+  "name": "firebase-ui-example",
+  "version": "1.0.0",
+  "description": "Firebase UI Example",
+  "scripts": {
+    "build": "npm install && webpack",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "firebaseui": "^6.1.0",
+    "gcip-iap": "^2.0.0"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^5.5.3",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
