@@ -83,7 +83,8 @@ gcloud app deploy ./app.yaml --project=$PROJECT_ID
 ## FirebaseUI IAP Sign-in Page
 - Update the firebaseui/src/main.js variables to match the settings obtained during the "Enable Identity Platform and Configure Provider" part of these instructions.
     - API_KEY=[authKey from Identity Platform Provider Setup] \
-    - AUTH_DOMAIN=[authDomain from Identity Platform Provider Setup] \
+    - AUTH_DOMAIN=[Cloud Run Domain e.g. {CloudRunServiceName}-{PROJECT_NUMBER}.{REGION}.run.app] \
+        - You can also use the authDomain from Identity Platform Provider Setup if using FirebaseUI "popup" mode instead of "redirect" mode.
     - PROVIDER=[Identity Platform Provider name, e.g. oidc.okta] \
     - PROVIDER_NAME=[Display name shown on sign-in page, e.g. Okta] \
     - SCOPES=[Additional scopes requested from IDP (comma separated), e.g. sample_app_scope,admin_scopes ] \
@@ -116,11 +117,16 @@ gcloud projects add-iam-policy-binding  ${PROJECT_ID} \
   --member "serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
    --role='roles/artifactregistry.createOnPushWriter'
 
+gcloud projects add-iam-policy-binding  ${PROJECT_ID} \
+  --member "serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+   --role='roles/run.builder'
+
 gcloud run deploy ${SERVICE_NAME} \
     --source . \
     --project=$PROJECT_ID \
     --region=$REGION \
-    --allow-unauthenticated
+    --allow-unauthenticated \
+    --set-env-vars "FIREBASEUI_URL=[authDomain from Identity Platform Provider Setup..e.g. https://{PROJECT_ID}.firebaseapp.com/__/auth"
 ```
 
 ## Configure IAP for External Identities
@@ -140,7 +146,7 @@ gcloud iap oauth-brands create \
 |<ul type="square"><li>Tell IAP that you now have your own sign-in page that you would like to use. Add the Cloud Run URL that was just deployed above. Detailed directions can be found in this [Enable External Identities](https://cloud.google.com/iap/docs/enable-external-identities#enabling_to_use_external_identities) documentation</li></ul>|  <img src="./images/iap-custom-url.png" width="800" />|
 |<ul type="square"><li>Toggle on IAP for the Sample Application</li></ul>|  <img src="./images/toggle-iap.png" width="800" />|
 |<ul type="square"><li>Add the FirebaseUI Cloud Run domain to the "Authorized Domains" in your Identity Platform OIDC Provider configuration.</li><li>Additionally, ensure that "iap.googleapis.com" is included in the list. If not, add it.</li></ul>|  <img src="./images/authorized-domains.png" width="800" />|
-|<ul type="square"><li>Add the Firebase AUTH_DOMAIN from the start of this section, with a '\__/auth/handler' path, as an authorized sign-in redirect URI in your IDP configuration</li><li>__/auth/handler is the expected redirect endpoint for FirebaseUI and more details can be found [here](https://firebase.google.com/docs/auth/web/redirect-best-practices)</li></ul>|  <img src="./images/authorized-sign-in-redirect-uris.png" width="800" />|
+|<ul type="square"><li>Add the same Firebase AUTH_DOMAIN from the start of this section, with a '\__/auth/handler' path, as an authorized sign-in redirect URI in your IDP configuration</li><li>__/auth/handler is the expected redirect endpoint for FirebaseUI and more details can be found [here](https://firebase.google.com/docs/auth/web/redirect-best-practices)</li><li>To assist with CORS concerns, [Option 3](https://firebase.google.com/docs/auth/web/redirect-best-practices#proxy-requests) is what is configured in this example as shown in firebaseui/server.js with the firebaseProxyMiddleware constructor.</ul>|  <img src="./images/authorized-sign-in-redirect-uris.png" width="800" />|
 
 ### Example Decoded JWT Payloads
 

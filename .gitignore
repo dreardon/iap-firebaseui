@@ -6,3 +6,4 @@ sample-app/node_modules/
 firebaseui/node_modules/
 firebaseui/dist/
 firebaseui/archive/
+firebaseui/.env

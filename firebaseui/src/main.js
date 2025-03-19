@@ -6,7 +6,18 @@ const configs = {
     authDomain: '[AUTH_DOMAIN]',
     displayMode: 'optionsFirst',
     tosUrl: 'https://sampletos.com',
-    privacyPolicyUrl: 'https://cloud.google.com/terms/cloud-privacy-notice',        
+    privacyPolicyUrl: 'https://cloud.google.com/terms/cloud-privacy-notice',
+    callbacks: {
+      beforeSignInSuccess: (user) => {
+        return user.updateProfile({
+          displayName: 'Custom Display Name',
+        }).then(function() {
+          return user.getIdToken(true);
+        }).then(function() {
+          return user;
+        });
+      }
+    },
     tenants: {
       '*': {
         signInOptions: [
@@ -19,7 +30,7 @@ const configs = {
           }
         ],
         immediateFederatedRedirect: false,
-        signInFlow: 'popup',
+        signInFlow: 'redirect',
       }
     }
   }
@@ -29,4 +40,3 @@ const handler = new firebaseui.auth.FirebaseUiHandler(
   '#firebaseui-auth-container', configs);
 const ciapInstance = new ciap.Authentication(handler);
 ciapInstance.start();
-
